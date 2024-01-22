@@ -94,7 +94,7 @@ exports.getProfile = async (req, res) => {
         id: req.user.id
       },
       attributes: {
-        exclude: ['id', 'password', 'createdAt', 'updatedAt']
+        exclude: ['id', 'password', 'image_public_id', 'createdAt', 'updatedAt']
       }
     });
 
