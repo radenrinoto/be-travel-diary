@@ -154,8 +154,7 @@ _Response (200)_
         "profile": {
             "fullname": "rinotoharto",
             "email": "rinotoharto@mail.com",
-            "profileImage": null,
-            "image_public_id": null
+            "profileImage": null
         }
     }
 }
