@@ -1,6 +1,7 @@
 const { User } = require('../models');
 const { Op } = require('sequelize')
 
+const { uploadToCloudinary, cloudinaryDeleteImg } = require("../utils/cloudinary");
 const { comparePassword } = require('../utils/bcryptPassword');
 const { decryptTextPayload } = require('../utils/decryptPayload');
 const { generateToken } = require('../utils/jwt');
@@ -103,5 +104,50 @@ exports.getProfile = async (req, res) => {
     return responseSuccess(res, 200, 'Success', { profile: userData })
   } catch (error) {
     return responseError(res, 500, 'Internal Server Error', 'An error occurred');
+  }
+}
+
+exports.updateUserProfile = async (req, res) => {
+  let imageResult
+  try {
+    if (req.fileValidationError)
+      return responseError(
+        res,
+        400,
+        'Bad Request',
+        req.fileValidationError.message
+      )
+
+    if (!req?.files?.profileImage)
+      return responseError(res, 400, 'Validation Failed', 'Image is required')
+
+    imageResult = await uploadToCloudinary(req?.files?.profileImage[0], 'image')
+
+    if (!imageResult?.url)
+      return responseError(res, 500, 'Internal server error', imageResult)
+
+    const authData = req.user
+
+    const response = await User.update(
+      { profileImage: imageResult?.url, image_public_id: imageResult?.public_id },
+      {
+        where: {
+          id: authData.id,
+        },
+      }
+    )
+
+    if (!response.length && imageResult?.public_id) {
+      await cloudinaryDeleteImg(imageResult.public_id, 'image')
+      return responseError(res, 404, 'Not Found', 'User not found')
+    }
+
+    return responseSuccess(res, 200, 'success')
+  } catch (error) {
+    if (imageResult?.public_id) {
+      await cloudinaryDeleteImg(imageResult.public_id, 'image')
+    }
+
+    return responseError(res, error?.status, error?.message)
   }
 }

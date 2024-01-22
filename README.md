@@ -168,6 +168,40 @@ _Response (401 - Invalid Token)_
 }
 ```
 
+### PATCH /api/user/update/profile
+
+> Update Profile picture
+
+_Request Header_
+```
+{
+  Authorization: 'Bearer <token>'
+}
+```
+
+_Request Body_
+```
+{
+    profileImage: <file_image>
+}
+```
+
+_Response (400 - Validation Error)_
+```
+{
+    "status": "Validation Failed",
+    "message": "Image is required"
+}
+```
+
+_Response (200)_
+```
+{
+    "status": "success"
+}
+```
+
+
 ---
 
 ### API Post

@@ -109,9 +109,29 @@ const validateCreateBookmarkBody = (reqBody) => {
   return null
 }
 
+const validateBodyUpdateUserProfile = reqBody => {
+  const schema = Joi.object({
+    profileImage: Joi.string().allow(null, '').invalid(Joi.number()).messages({
+      'string.base': 'profileImage should be a string.',
+      'any.only': 'profileImage should be a string or null.',
+      'any.invalid': 'profileImage cannot be a number.',
+    }),
+  })
+  const { error } = schema.validate(reqBody, {
+    abortEarly: false,
+  })
+
+  if (error) {
+    return error.details.map(err => err.message).join(', ')
+  }
+
+  return null
+}
+
 module.exports = {
   validateRegisterBody,
   validateLoginBody,
   validateCreatePostBody,
-  validateCreateBookmarkBody
+  validateCreateBookmarkBody,
+  validateBodyUpdateUserProfile
 }
