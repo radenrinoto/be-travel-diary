@@ -6,7 +6,7 @@ const router = require('./routes');
 
 const app = express();
 
-const PORT = 3000;
+const PORT = 3001;
 dotenv.config();
 
 app.use(cors());
