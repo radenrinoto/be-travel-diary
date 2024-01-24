@@ -14,7 +14,7 @@ Travel diary backend:
 
 _Server_
 ```
-http://localhost:3000
+http://localhost:3001
 ```
 ---
 
