@@ -117,7 +117,6 @@ exports.removePost = async (req, res) => {
 
     return responseSuccess(res, 200, 'Success');
   } catch (error) {
-    console.log(error, '<< ERROR')
     return responseError(res, 500, 'Internal Server Error', 'An error occurred')
   }
 }

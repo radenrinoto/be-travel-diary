@@ -1,5 +1,5 @@
 const { User } = require('../models');
-const { Op } = require('sequelize')
+const { Op } = require('sequelize');
 
 const { uploadToCloudinary, cloudinaryDeleteImg } = require("../utils/cloudinary");
 const { comparePassword } = require('../utils/bcryptPassword');
@@ -67,9 +67,14 @@ exports.login = async (req, res) => {
 
     if (validate) return responseError(res, 400, 'Validation Error', validate);
 
-    const user = await User.findOne({ where: {
-      email: decryptedEmail
-    }})
+    const user = await User.findOne({
+      where: {
+        email: decryptedEmail
+      },
+      attributes: {
+        exclude: ['image_public_id', 'createdAt', 'updatedAt']
+      }
+    })
 
     if (!user) return responseError(res, 404, 'Not Found', 'User Not Found');
 
@@ -82,7 +87,15 @@ exports.login = async (req, res) => {
       email: user.email,
       fullname: user.fullname
     });
-    return responseSuccess(res, 200, 'Success', { token: accessToken });
+
+    const dataUser = {
+      id: user.id,
+      email: user.email,
+      fullname: user.fullname,
+      profileImage: user.profileImage
+    }
+
+    return responseSuccess(res, 200, 'Success', { token: accessToken, user: dataUser });
   } catch (error) {
     return responseError(res, 500, 'Internal Server Error', 'An error occurred');
   }

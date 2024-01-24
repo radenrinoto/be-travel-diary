@@ -30,7 +30,6 @@ const Authentication = async (req, res, next) => {
     return next();
 
   } catch (error) {
-    console.log(error, '<<<< ERROR')
     return responseError(res, 500, 'Internal Server Error', 'An error occurred')
   }
 }
