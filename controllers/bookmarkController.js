@@ -55,9 +55,10 @@ exports.createBookmark = async (req, res) => {
     if (!checkPost) return responseError(res, 404, 'Not Found', 'Post not found');
 
     const checkBookmark = await Bookmark.findAll({
-      where: {
-        idPost: postId
-      }
+      where: [
+        { idPost: postId },
+        { idUser: userId },
+      ]
     })
 
     if (!_.isEmpty(checkBookmark)) return responseError(res, 400, 'Bad Request', 'Post with this id already bookmarked')
